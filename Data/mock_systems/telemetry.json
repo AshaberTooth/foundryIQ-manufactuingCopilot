@@ -1,0 +1,12 @@
+{
+  "PL4-CONV-001": {
+    "alarm_code": "E-217",
+    "motor_temperature_c": 48.2,
+    "motor_current_amp": 6.1,
+    "belt_speed_mps": 1.2,
+    "photo_eye_signal_stability": "intermittent",
+    "restart_failure_window_seconds": 45,
+    "vibration_sensor_bracket": "high",
+    "downstream_obstruction_detected": false
+  }
+}

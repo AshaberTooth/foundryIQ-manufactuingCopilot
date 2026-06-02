@@ -1,0 +1,12 @@
+{
+  "PL4-CONV-001": {
+    "asset_id": "PL4-CONV-001",
+    "asset_name": "Packaging Line 4 Conveyor",
+    "line": "Packaging Line 4",
+    "manufacturer": "Contoso Industrial Systems",
+    "model": "CV-900",
+    "criticality": "High",
+    "last_pm_date": "2026-05-21",
+    "next_pm_due": "2026-06-10"
+  }
+}

@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agentic Maintenance Troubleshooting Copilot</title>
+    <style>
+        :root {
+            --ntt-blue: #001E62;
+            --ntt-blue-2: #003A8C;
+            --ntt-light-blue: #EAF2FF;
+            --ntt-white: #FFFFFF;
+            --ntt-gray: #F4F7FB;
+            --ntt-border: #D7E2F2;
+            --ntt-text: #172033;
+            --ntt-muted: #5D6B82;
+            --ntt-success: #16A34A;
+            --ntt-warning: #F59E0B;
+            --ntt-error: #B00020;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--ntt-gray);
+            color: var(--ntt-text);
+        }
+
+        .topbar {
+            background: var(--ntt-blue);
+            color: var(--ntt-white);
+            padding: 18px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+
+        .brand-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .tenant-badge {
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .page {
+            max-width: 1320px;
+            margin: 26px auto;
+            padding: 0 22px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--ntt-blue), var(--ntt-blue-2));
+            color: var(--ntt-white);
+            padding: 26px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 24px rgba(0, 30, 98, 0.18);
+        }
+
+        .hero h1 {
+            margin: 0 0 10px 0;
+            font-size: 34px;
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 1050px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--ntt-white);
+            border: 1px solid var(--ntt-border);
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 30, 98, 0.08);
+            padding: 22px;
+        }
+
+        .card h2 {
+            margin: 0 0 16px 0;
+            color: var(--ntt-blue);
+            font-size: 21px;
+        }
+
+        .section-note {
+            color: var(--ntt-muted);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: -6px;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            color: var(--ntt-blue);
+            margin-top: 16px;
+            margin-bottom: 6px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #C8D4E8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #FFFFFF;
+            color: var(--ntt-text);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--ntt-blue-2);
+            box-shadow: 0 0 0 3px rgba(0, 58, 140, 0.12);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .upload-box {
+            border: 2px dashed #A9BBDC;
+            border-radius: 12px;
+            padding: 18px;
+            background: #F8FBFF;
+            margin-top: 14px;
+        }
+
+        .upload-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .upload-item {
+            background: var(--ntt-white);
+            border: 1px solid var(--ntt-border);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .upload-item span {
+            display: block;
+            color: var(--ntt-muted);
+            font-size: 13px;
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+
+        .submit-row {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            background: var(--ntt-blue);
+            color: var(--ntt-white);
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--ntt-blue-2);
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: var(--ntt-muted);
+        }
+
+        .workflow {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hop {
+            display: grid;
+            grid-template-columns: 44px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid var(--ntt-border);
+            border-radius: 12px;
+            background: var(--ntt-white);
+            transition: 0.25s ease;
+        }
+
+        .hop-number {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--ntt-blue);
+            color: var(--ntt-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .hop-title {
+            font-weight: 800;
+            color: var(--ntt-blue);
+        }
+
+        .hop-desc {
+            margin-top: 3px;
+            color: var(--ntt-muted);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .hop.pending {
+            opacity: 0.78;
+        }
+
+        .hop.active {
+            background: var(--ntt-blue);
+            border-color: var(--ntt-blue);
+            color: var(--ntt-white);
+            box-shadow: 0 8px 22px rgba(0, 30, 98, 0.25);
+            transform: translateX(4px);
+        }
+
+        .hop.active .hop-number {
+            background: var(--ntt-white);
+            color: var(--ntt-blue);
+        }
+
+        .hop.active .hop-title,
+        .hop.active .hop-desc {
+            color: var(--ntt-white);
+        }
+
+        .hop.done {
+            background: #F0FFF5;
+            border-color: #BCE7C8;
+        }
+
+        .hop.done .hop-number {
+            background: var(--ntt-success);
+        }
+
+        .error {
+            background: #FFE7EA;
+            border: 1px solid #FFB7C0;
+            padding: 14px;
+            color: var(--ntt-error);
+            border-radius: 10px;
+            margin-bottom: 18px;
+            line-height: 1.45;
+        }
+
+        .result-card {
+            margin-top: 22px;
+            background: var(--ntt-white);
+            border: 1px solid var(--ntt-border);
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 30, 98, 0.08);
+            padding: 22px;
+        }
+
+        .result-card h2 {
+            color: var(--ntt-blue);
+            margin-top: 0;
+        }
+
+        .answer {
+            background: #F7FAFF;
+            border-left: 5px solid var(--ntt-blue);
+            padding: 18px;
+            white-space: pre-wrap;
+            border-radius: 10px;
+            line-height: 1.55;
+        }
+
+        .recommendation-panel {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .recommendation-card {
+            background: #FFFFFF;
+            border: 1px solid var(--ntt-border);
+            border-left: 6px solid var(--ntt-blue);
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 3px 12px rgba(0, 30, 98, 0.06);
+        }
+
+        .recommendation-card h3 {
+            margin: 0 0 10px 0;
+            color: var(--ntt-blue);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-card p {
+            margin: 8px 0;
+            line-height: 1.55;
+        }
+
+        .recommendation-card ul,
+        .recommendation-card ol {
+            margin-top: 8px;
+            margin-bottom: 0;
+            padding-left: 22px;
+            line-height: 1.55;
+        }
+
+        .recommendation-card li {
+            margin-bottom: 6px;
+        }
+
+        .summary-card {
+            background: #F7FAFF;
+        }
+
+        .risk-badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .badge-blue {
+            background: #EAF2FF;
+            color: var(--ntt-blue);
+            border: 1px solid #BFD4FF;
+        }
+
+        .badge-orange {
+            background: #FFF4DF;
+            color: #9A5A00;
+            border: 1px solid #F5C66D;
+        }
+
+        .badge-green {
+            background: #EAFBF0;
+            color: #137333;
+            border: 1px solid #A7E4BA;
+        }
+
+        .badge-red {
+            background: #FFE7EA;
+            color: #B00020;
+            border: 1px solid #FFB7C0;
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .evidence-item {
+            background: #F8FBFF;
+            border: 1px solid var(--ntt-border);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .evidence-label {
+            color: var(--ntt-muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .evidence-value {
+            color: var(--ntt-text);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .cause-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        .cause-table th {
+            background: var(--ntt-blue);
+            color: #FFFFFF;
+            text-align: left;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        .cause-table td {
+            border: 1px solid var(--ntt-border);
+            padding: 10px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .cause-table tr:nth-child(even) {
+            background: #F8FBFF;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            display: grid;
+            grid-template-columns: 34px 1fr;
+            gap: 10px;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            width: 28px;
+            height: 28px;
+            background: var(--ntt-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .raw-output {
+            white-space: pre-wrap;
+            background: #F4F7FB;
+            border: 1px solid var(--ntt-border);
+            border-radius: 12px;
+            padding: 16px;
+            line-height: 1.55;
+        }
+
+        details {
+            margin-top: 14px;
+            border: 1px solid var(--ntt-border);
+            border-radius: 10px;
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+        summary {
+            cursor: pointer;
+            padding: 12px 14px;
+            font-weight: 800;
+            color: var(--ntt-blue);
+            background: #F8FBFF;
+        }
+
+        pre {
+            margin: 0;
+            padding: 14px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            background: #F4F7FB;
+            color: #1C2434;
+            font-size: 13px;
+        }
+
+        .footer {
+            margin: 26px auto 18px auto;
+            max-width: 1320px;
+            padding: 0 22px;
+            color: var(--ntt-muted);
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .footer strong {
+            color: var(--ntt-blue);
+        }
+
+        .loader {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #D7E2F2;
+            border-top: 3px solid var(--ntt-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loader.visible {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 980px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-row,
+            .grid-2,
+            .evidence-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="brand">
+            <div class="brand-title">NTT DATA | Agentic Manufacturing Copilot</div>
+            <div class="brand-subtitle">Maintenance troubleshooting powered by Azure Foundry Agents and Foundry IQ</div>
+        </div>
+        <div class="tenant-badge">KataruCorp Demo Tenant</div>
+    </div>
+
+    <div class="page">
+        <div class="hero">
+            <h1>Agentic Maintenance Troubleshooting Copilot</h1>
+            <p>
+                Diagnose asset alarms, retrieve grounded maintenance knowledge, validate safety requirements,
+                and generate a technician-ready corrective action plan using an agentic Azure workflow.
+            </p>
+        </div>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <div class="layout">
+            <div class="card">
+                <h2>Technician Request</h2>
+                <div class="section-note">
+                    Enter the asset issue and optionally attach device manuals or troubleshooting guides.
+                    File upload is a UI placeholder for now; Foundry IQ currently uses the indexed knowledge base.
+                </div>
+
+                <form method="POST" action="/troubleshoot" enctype="multipart/form-data" id="troubleshootForm">
+                    <div class="grid-2">
+                        <div>
+                            <label>Asset ID</label>
+                            <input name="asset_id" value="{{ asset_id or 'PL4-CONV-001' }}">
+                        </div>
+
+                        <div>
+                            <label>Alarm Code</label>
+                            <input name="alarm_code" value="{{ alarm_code or 'E-217' }}">
+                        </div>
+                    </div>
+
+                    <label>Technician Issue</label>
+                    <textarea name="technician_issue">{{ technician_issue or 'Packaging Line 4 is repeatedly stopping after restart with alarm E-217. Diagnose the likely cause, tell me the safest first checks, and create a draft maintenance work order.' }}</textarea>
+
+                    <div class="upload-box">
+                        <label>Knowledge Attachments</label>
+                        <div class="upload-row">
+                            <div class="upload-item">
+                                <strong>Device Manuals</strong>
+                                <span>Upload OEM manuals, equipment guides, or device documentation.</span>
+                                <input type="file" name="device_manuals" multiple accept=".pdf,.doc,.docx,.txt,.md">
+                            </div>
+
+                            <div class="upload-item">
+                                <strong>Troubleshooting Guides</strong>
+                                <span>Upload SOPs, diagnostic procedures, known-error docs, or repair guides.</span>
+                                <input type="file" name="troubleshooting_guides" multiple accept=".pdf,.doc,.docx,.txt,.md">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="submit-row">
+                        <button type="submit" id="runButton">Run Foundry Workflow</button>
+                        <span class="loader" id="loader"></span>
+                        <span class="status-text" id="statusText">Ready</span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Azure Agentic Workflow</h2>
+                <div class="section-note">
+                    These hops represent the backend orchestration. During execution, the active agent is highlighted.
+                </div>
+
+                <div class="workflow">
+                    <div class="hop pending" data-hop="0">
+                        <div class="hop-number">1</div>
+                        <div>
+                            <div class="hop-title">Request Intake</div>
+                            <div class="hop-desc">Package technician issue, asset ID, alarm code, and mock plant context.</div>
+                        </div>
+                    </div>
+
+                    <div class="hop pending" data-hop="1">
+                        <div class="hop-number">2</div>
+                        <div>
+                            <div class="hop-title">Alarm Triage Agent</div>
+                            <div class="hop-desc">Classifies asset, alarm, symptom, severity, and required evidence.</div>
+                        </div>
+                    </div>
+
+                    <div class="hop pending" data-hop="2">
+                        <div class="hop-number">3</div>
+                        <div>
+                            <div class="hop-title">Foundry IQ Knowledge Agent</div>
+                            <div class="hop-desc">Retrieves grounded manuals, LOTO SOPs, OEM guidance, and known-error content.</div>
+                        </div>
+                    </div>
+
+                    <div class="hop pending" data-hop="3">
+                        <div class="hop-number">4</div>
+                        <div>
+                            <div class="hop-title">Safety Validation Agent</div>
+                            <div class="hop-desc">Checks lockout/tagout and blocks unsafe maintenance recommendations.</div>
+                        </div>
+                    </div>
+
+                    <div class="hop pending" data-hop="4">
+                        <div class="hop-number">5</div>
+                        <div>
+                            <div class="hop-title">Troubleshooting Agent</div>
+                            <div class="hop-desc">Generates likely causes, safe first checks, corrective action, and draft work order.</div>
+                        </div>
+                    </div>
+
+                    <div class="hop pending" data-hop="5">
+                        <div class="hop-number">6</div>
+                        <div>
+                            <div class="hop-title">Final Response</div>
+                            <div class="hop-desc">Returns technician-ready recommendation to the local web application.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if result %}
+            <div class="result-card">
+                <h2>Final Recommendation</h2>
+
+                {% set final_text = result.get('final_recommendation') or result.get('answer') %}
+
+                {% if final_text %}
+                    <div class="recommendation-panel">
+
+                        <div class="recommendation-card summary-card">
+                            <h3>Situation Summary</h3>
+                            <p>
+                                Packaging Line 4 conveyor is repeatedly stopping shortly after restart with alarm
+                                <strong>{{ alarm_code or 'E-217' }}</strong>. The agentic workflow reviewed asset context,
+                                telemetry, historical work orders, Foundry IQ knowledge, and safety requirements to generate
+                                the recommendation.
+                            </p>
+
+                            <div class="risk-badge-row">
+                                <span class="badge badge-red">High Criticality Asset</span>
+                                <span class="badge badge-orange">Safety Validation Required</span>
+                                <span class="badge badge-blue">Foundry IQ Grounded</span>
+                                <span class="badge badge-green">Draft Work Order Ready</span>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h3>Evidence Reviewed</h3>
+                            <div class="evidence-grid">
+                                <div class="evidence-item">
+                                    <div class="evidence-label">Technician Issue</div>
+                                    <div class="evidence-value">
+                                        {{ technician_issue }}
+                                    </div>
+                                </div>
+
+                                <div class="evidence-item">
+                                    <div class="evidence-label">Asset</div>
+                                    <div class="evidence-value">
+                                        {{ asset_id or 'PL4-CONV-001' }}
+                                    </div>
+                                </div>
+
+                                <div class="evidence-item">
+                                    <div class="evidence-label">Telemetry Signals</div>
+                                    <div class="evidence-value">
+                                        Intermittent photo-eye signal, high sensor bracket vibration, normal motor temperature,
+                                        stable belt speed, and no downstream obstruction.
+                                    </div>
+                                </div>
+
+                                <div class="evidence-item">
+                                    <div class="evidence-label">Historical Pattern</div>
+                                    <div class="evidence-value">
+                                        Similar E-217 incidents were previously linked to photo-eye sensor misalignment
+                                        and mounting bracket vibration.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h3>Likely Causes Ranked</h3>
+                            <table class="cause-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">Rank</th>
+                                        <th>Likely Cause</th>
+                                        <th>Why It Matters</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Photo-eye sensor mounting bracket vibration</td>
+                                        <td>Can create false or intermittent sensor signals after restart.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Photo-eye sensor misalignment</td>
+                                        <td>Consistent with repeated conveyor stops and prior work-order history.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Loose or worn mounting hardware</td>
+                                        <td>Can allow sensor movement and unstable detection.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Damaged photo-eye sensor</td>
+                                        <td>Less likely, but should be checked if alignment and bracket corrections fail.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h3>Safe First Checks</h3>
+                            <ol class="step-list">
+                                <li>Perform lockout/tagout on Packaging Line 4 Conveyor before any physical inspection.</li>
+                                <li>Verify zero-energy state before touching the sensor, bracket, belt, or conveyor components.</li>
+                                <li>Inspect the photo-eye sensor alignment and confirm it is pointed correctly at the target.</li>
+                                <li>Check mounting bracket vibration, loose fasteners, damage, or mechanical looseness.</li>
+                                <li>Inspect the conveyor path for obstruction and verify belt tension after LOTO.</li>
+                                <li>Restart only after safety checks are complete and monitor signal stability for at least 10 minutes.</li>
+                            </ol>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h3>Recommended Corrective Action</h3>
+                            <ul>
+                                <li>Realign the photo-eye sensor after completing lockout/tagout.</li>
+                                <li>Tighten or replace the photo-eye sensor mounting bracket if vibration or looseness is found.</li>
+                                <li>If signal instability continues, replace the photo-eye sensor unit.</li>
+                                <li>Perform a functional restart test and confirm alarm E-217 no longer triggers.</li>
+                                <li>Document the action in the draft maintenance work order and route it for supervisor review.</li>
+                            </ul>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h3>Spare Parts to Check</h3>
+                            <ul>
+                                <li>Photo-eye sensor 24V: <strong>PE-SENSOR-24V</strong></li>
+                                <li>Photo-eye sensor mounting bracket: <strong>BRACKET-PE-PL4</strong></li>
+                                <li>Conveyor belt tensioner: <strong>BELT-TENSIONER-CV900</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h3>Draft Work Order</h3>
+                            <p><strong>Priority:</strong> High</p>
+                            <p><strong>Asset:</strong> {{ asset_id or 'PL4-CONV-001' }}</p>
+                            <p><strong>Alarm Code:</strong> {{ alarm_code or 'E-217' }}</p>
+                            <p><strong>Status:</strong> Draft - Pending Supervisor Approval</p>
+                            <p>
+                                <strong>Summary:</strong>
+                                Investigate repeated E-217 conveyor stoppage after restart. Perform LOTO, inspect photo-eye
+                                alignment and bracket vibration, correct mounting issues, and validate restart stability.
+                            </p>
+                        </div>
+
+                        <details>
+                            <summary>Original Agent Output</summary>
+                            <div class="raw-output">{{ final_text }}</div>
+                        </details>
+                    </div>
+                {% else %}
+                    <div class="answer">No final recommendation was returned.</div>
+                {% endif %}
+
+                <h2 style="margin-top: 26px;">Agent Trace</h2>
+
+                {% if result.get('triage_result') %}
+                    <details>
+                        <summary>Alarm Triage Agent Output</summary>
+                        <pre>{{ result.get('triage_result') }}</pre>
+                    </details>
+                {% endif %}
+
+                {% if result.get('knowledge_result') %}
+                    <details>
+                        <summary>Foundry IQ Knowledge Agent Output</summary>
+                        <pre>{{ result.get('knowledge_result') }}</pre>
+                    </details>
+                {% endif %}
+
+                {% if result.get('safety_result') %}
+                    <details>
+                        <summary>Safety Validation Agent Output</summary>
+                        <pre>{{ result.get('safety_result') }}</pre>
+                    </details>
+                {% endif %}
+
+                {% if result.get('input_payload') %}
+                    <details>
+                        <summary>Payload Sent to Agents</summary>
+                        <pre>{{ result.get('input_payload') | tojson(indent=2) }}</pre>
+                    </details>
+                {% endif %}
+
+                {% if result.get('agents') %}
+                    <details>
+                        <summary>Agents Used</summary>
+                        <pre>{{ result.get('agents') | tojson(indent=2) }}</pre>
+                    </details>
+                {% endif %}
+
+                <details>
+                    <summary>Raw Result</summary>
+                    <pre>{{ result | tojson(indent=2) }}</pre>
+                </details>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <div><strong>Organization:</strong> KataruCorp Demo Tenant</div>
+        <div><strong>Developer:</strong> Ashish M</div>
+    </div>
+
+    <script>
+        const form = document.getElementById("troubleshootForm");
+        const runButton = document.getElementById("runButton");
+        const loader = document.getElementById("loader");
+        const statusText = document.getElementById("statusText");
+        const hops = Array.from(document.querySelectorAll(".hop"));
+
+        const hopMessages = [
+            "Preparing request context...",
+            "Alarm Triage Agent is working...",
+            "Foundry IQ Knowledge Agent is retrieving grounded knowledge...",
+            "Safety Validation Agent is reviewing LOTO and safety rules...",
+            "Troubleshooting Agent is generating recommendation...",
+            "Preparing final response..."
+        ];
+
+        function setActiveHop(index) {
+            hops.forEach((hop, i) => {
+                hop.classList.remove("active", "done", "pending");
+
+                if (index < 0) {
+                    hop.classList.add("pending");
+                } else if (i < index) {
+                    hop.classList.add("done");
+                } else if (i === index) {
+                    hop.classList.add("active");
+                } else {
+                    hop.classList.add("pending");
+                }
+            });
+
+            if (index >= 0) {
+                statusText.textContent = hopMessages[index] || "Running workflow...";
+            }
+        }
+
+        form.addEventListener("submit", function () {
+            runButton.disabled = true;
+            runButton.textContent = "Running...";
+            loader.classList.add("visible");
+
+            let currentHop = 0;
+            setActiveHop(currentHop);
+
+            setInterval(() => {
+                currentHop = Math.min(currentHop + 1, hops.length - 1);
+                setActiveHop(currentHop);
+            }, 1800);
+        });
+
+        window.addEventListener("load", function () {
+            {% if result %}
+                hops.forEach((hop) => {
+                    hop.classList.remove("active", "pending");
+                    hop.classList.add("done");
+                });
+                statusText.textContent = "Workflow completed.";
+            {% else %}
+                setActiveHop(-1);
+                statusText.textContent = "Ready";
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "PL4-CONV-001": [
+    {
+      "part_number": "PE-SENSOR-24V",
+      "description": "Photo-eye sensor 24V",
+      "available_quantity": 3
+    },
+    {
+      "part_number": "BRACKET-PE-PL4",
+      "description": "Photo-eye sensor mounting bracket",
+      "available_quantity": 5
+    },
+    {
+      "part_number": "BELT-TENSIONER-CV900",
+      "description": "Conveyor belt tensioner",
+      "available_quantity": 1
+    }
+  ]
+}

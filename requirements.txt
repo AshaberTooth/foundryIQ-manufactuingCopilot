@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+gunicorn
+pydantic
+python-dotenv
+flask
+requests
+azure-identity

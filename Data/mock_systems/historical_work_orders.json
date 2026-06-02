@@ -1,0 +1,20 @@
+[
+  {
+    "work_order_id": "WO-10491",
+    "asset_id": "PL4-CONV-001",
+    "alarm_code": "E-217",
+    "symptom": "Conveyor stopped within 60 seconds after restart",
+    "root_cause": "Photo-eye sensor bracket vibration",
+    "resolution": "Realigned sensor and tightened mounting bracket",
+    "downtime_minutes": 42
+  },
+  {
+    "work_order_id": "WO-10533",
+    "asset_id": "PL4-CONV-001",
+    "alarm_code": "E-217",
+    "symptom": "Repeated false obstruction detection",
+    "root_cause": "Photo-eye sensor misalignment",
+    "resolution": "Adjusted sensor angle and verified signal stability",
+    "downtime_minutes": 35
+  }
+]
