@@ -6,3 +6,4 @@ python-dotenv
 flask
 requests
 azure-identity
+python-dotenv
